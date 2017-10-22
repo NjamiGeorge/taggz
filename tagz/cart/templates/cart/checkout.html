@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<script>
+
+{% block jquery %}
+
+
+var clientToken = "{{ client_token }}";
+
+braintree.setup(clientToken, "dropin", {
+  container: "payment-form"
+});
+
+
+
+{% endblock %}
+
+</script>
+
+{% if not user_auth %}
+
+	<div class="row">
+	<div class="col-sm-offset-4">
+	<div class="row">
+		
+	<div class="col-sm-6 col-sm-offset-2">
+	<h4> continue as guest</h4>
+	<form method="POST" action="">{% csrf_token %}
+	{{ form|crispy }}
+	<br/>
+	<input type="submit" class="btn btn-success" value="continue" />
+	</form>
+
+	</div>
+
+	<div class="col-sm-4">
+	<br/>
+	<br/>
+	<form method="POST" action="{% url 'auth_login' %}">{% csrf_token %}
+	{{ login_form|crispy }}
+	<input type="hidden" name="next" value="{{ next_url }}" />
+	<br/>
+	<input type="submit" class="btn btn-success" value="login" /> 
+	</form>
+	<p class="text-center">
+	<p>{% trans "" %} <a href="{% url 'auth_password_reset' %}">{% trans "Reset password" %}</a>!</p>
+	<p>{% trans "Not member" %}? <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>!</p>
+	</p>
+	</div>
+	</div>
+	</div>
+	</div>
+
+	{% else %}
+
+	<div class="col-sm-6 col-sm-offset-6 text-center">
+	<p class="lead">Order Summary</p>
+	<table class="table">
+	<tr><td>Cart total: {{ order.cart.total }}</td></tr>
+	<tr><td>Shipping: {{ order.shipping_total_price }}</td></tr>
+	<tr><td>Total: {{ order.order_total }}</td></tr>
+	</table>
+	</div>
+
+	<div class="col-sm-6 col-sm-offset-6 text-center">
+	<p><b>Billing to:</b>
+	</br>
+	{{ order.billing_address.get_address }}
+	</p>
+	<p><b>Shipping to:</b>
+	</br>
+	{{ order.shipping_address.get_address }}
+	</p>
+	<p>
+	<a href="{% url 'order_address' %}">Change an address</a>
+	</p>
+	<form id="checkout" method="POST" action="{% url 'checkout_final' %}">{% csrf_token %}
+	<!-- <input type="hidden" name="payment-token" value="abc" /> -->
+	<div id="payment-form"></div>
+	<b><button class="btn btn-default" style="background-color:#00CCFF;" type="submit"> Complete</button></b>
+
+	</form>
+	</div>
+
+{% endif %}
+
+
+
+{% endblock %}

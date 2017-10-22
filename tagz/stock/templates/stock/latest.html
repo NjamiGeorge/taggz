@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+{% block arrivals %}
+<body>
+<ul>
+<div class="row">
+{% for latest_prod in latest %}
+
+<div class="col-xs-6 col-md-5">
+<div class="thumbnail">
+<img  src="{{ latest_prod.image.image.url }}"> 
+ <!-- <li>{{ latest_prod.image.image.url }}</li> -->
+ </div>
+ </div>
+ 
+
+{% endfor %}
+</div>
+ </ul>
+
+
+</body>
+{% endblock %}
+</html>

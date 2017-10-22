@@ -1,0 +1,80 @@
+
+.button-color {
+	background-color:#00CCFF;
+	color:black;
+	width:145px;
+	font-weight: bold;
+}
+.thumbnail {
+	border:0;
+}
+ul li {
+	list-style:none;
+}
+a:link {
+text-decoration:none;
+/*color:#F0E68C;*/
+}
+a:hover{
+	text-decoration:none;
+}
+
+.modal-modified {
+	position:fixed;
+	top:50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	width:600px;
+	max-width: 100%;
+}
+
+ .container-alert-flash{
+    position: absolute;
+    top: 70px;
+    z-index: 3000;
+    width: 100%;
+    right: 70px;
+    margin: 0px;
+    display:none;
+  }
+
+  .fa-navbar-cart{
+  	font-size:18px;
+  	vertical-align: middle;
+
+  }
+  .icons{
+  	margin-left: 20px 20px;
+  }
+
+  .img-slider{
+  	height: 80px;
+  	width:170px;
+  	border:none;
+  	text-align:center;
+
+  }
+  hr.style1{
+  	float: center;
+  	width:100%;
+  	text-align: center;
+  }
+
+  .menu{
+  	color:'Deep Sky Blue';
+  	font-weight:bold;
+  	font-size:15px;
+  }
+  .p-text{
+  	width:165px;
+  	height:7px;
+  	text-align: left;
+  	font-weight: bold;
+  	word-wrap:break-word;
+  }
+
+  .errors{
+  	color: red;
+  	font-weight: bold;
+  	font-size:14px;
+  }

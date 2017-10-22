@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+
+
+<script>
+
+{% block jquery %}
+
+$("button").click(function(){
+	product=$(this).attr('value');
+});
+
+
+
+
+
+
+
+$('#submit-form').click(function(evt){
+	evt.preventDefault();
+	if( $("#name1").val() == ""){
+		$("#error").addClass("errors").text("please enter your name");
+	}
+	else if ($("#number1").val() == "" || $("#number1").val().length < 10 ){
+		$("#error1").addClass("errors").text("number invalid or field is blank")
+	}
+	else if ($("#size1").val() == ""){
+		$("#error2").addClass("errors").text("please enter the size")
+	}
+	else if ($("#number1").val().length > 0 && $("#name1").val().length > 0 && $("#size1").val().length > 0 ){
+		$("#error").removeClass("errors").text("");
+		$("#error1").removeClass("errors").text("");
+		$("#error2").removeClass("errors").text("");
+		// $("#product1").attr("value")="";
+		$("#submit-form").unbind("click");
+	}
+
+
+});
+
+{% endblock %}
+
+</script>
+
+<head>
+	<title></title>
+</head>
+<body>
+{% if message %}
+<div class="row">
+<div class="col-sm-6 col-sm-offset-6">
+<div style="background-color:#00CCFF;color:white;text-align:center;" class="well">
+ <b> {{ message }}</b>
+ </div>
+</div>
+</div>
+{% endif %}
+<div class="row align-items-start">
+<div class="container">
+
+{% for img in object_list %}
+	<div class="col-xs-6 col-md-3">
+		<a style="border:none;" href="{{ img.get_absolute_url }}" class="thumbnail">
+		
+		<img style="width:150px;height:150px;border:none;" class="img-responsive" max-width="100%" src="{{ img.image.image.url }}">
+		</a>
+		<!-- <p id="item-{{ img.pk }}"class="p-text center-block">{{ img.name }}</p> -->
+		<p class="center-block" style="width:150px;height:7px;text-align:center;">{{ img.price }} Ksh</p><br/>
+		<button type="button" id="item-{{ img.pk }}" value= "{{img.name }}" class="button-color btn btn-default btn-block btn-responsive center-block" data-toggle="modal" data-target="#modalId"><p class="p-text">{{ img.name }}</p></button>
+
+		 {% cycle '' '' '' '</div><div class="row">' %} 
+		 </br>
+		 </br>
+		</div>
+
+
+	
+		{% endfor %}
+		
+
+ </div> 
+
+<!-- modal -->
+<div class="modal fade" id="modalId" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-sm">
+		<!--modal content -->
+		<div class="modal-content">
+		<div style="background-color:#00CCFF;"class="modal-header">
+			<input type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title text-center"><b>Check Availability</b></h4>
+
+
+		</div>
+
+		<div class="modal-body">
+
+	<form id="customer-form" class='form center-align' name="cust-form" method="POST" action="{% url 'customer' %}">
+	{% csrf_token %}
+	<div class="form-group">
+	<p id="error"></p>
+	<input id="name1" class="control-label center-block" type="text" name="name" placeholder="your name">
+	</div>
+	<div class="form-group">
+	<p id="error1"></p>
+	<input id="number1" class="control-label center-block" type="number" name="contact" placeholder="number">
+	</div>
+	<div class="form-group">
+	<p id="error2"></p>
+	<input id="size1" class="control-label center-block" type="text" name="size" placeholder="size">
+	</div>
+	<div class="form-group">
+	<input id="product1" class="control-label center-block" type="hidden" name="product" value="">
+
+	</div>
+	<input class="button-color btn center-block" id="submit-form" type="submit" value="submit">
+	</form>
+
+	</div>
+	<div class="modal-footer">
+		<a href="#" style="background-color:#00CCFF;" class="btn btn-default btn-block" data-dismiss="modal">Close</a>
+	</div>
+
+
+	</div>
+		
+		</div>
+		
+		
+			
+		</div>
+
+		</div>
+
+
+
+
+</body>
+{% endblock %}
+
+</html>

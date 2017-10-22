@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+{% block content %}
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<div class="row">
+<div class="container">
+{% for prod in jackets %}
+	<div class="col-xs-4 col-md-3">
+		<a style="border:none;" href="{{ prod.get_absolute_url }}" class="thumbnail">
+		
+		<img style="width:171px;height:150px;border:none;" class="img-responsive" max-width="100%" src="{{ prod.image.image.url }}">
+		</a>
+		<p style="width:150px;height:7px;text-align:center;font-weight:bold;">{{ prod.name }}</p>
+		<p style="width:150px;height:7px;text-align:center;">{{ prod.price }} Ksh</p></br>
+
+		 {% cycle '' '' '' '</div><div class="row">' %} 
+		 </br>
+		 </br>
+		</div>
+		{% endfor %}
+		</div>
+		</div>
+
+
+</body>
+{% endblock %}
+</html>

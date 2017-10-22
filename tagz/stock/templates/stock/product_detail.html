@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html>
+
+
+<script>
+ 
+
+ {% block jquery %}
+
+
+$(document).ready(function() {
+
+    function setPrice(){
+    	var price = $(".variation_select option:selected").attr("data-price")
+
+    var sale_price= $(".variation_select option:selected").attr("data-sale-price")
+    if (sale_price != "" && sale_price != "None" && sale_price != null ) {
+    	$("price").html("<h3>" + sale_price + "<small class='og-price'>" + price + "</small></h3>");
+
+    } else {
+    	$("price").html(price);
+    }
+    setPrice()
+
+    $(".variation_select").change(function(){
+    	setPrice()
+    	//put image $("img").attr('src',img);
+    })
+}
+//grab submit button
+//ajax add to cart
+
+$("#submit-btn").click(function(event){
+	event.preventDefault(); 
+	//get form data
+	var formData = $("#add-form").serialize(); 
+	console.log(formData);
+	// $("#add-form").submit()
+	$.ajax({
+		type:"GET",
+		url:"{% url 'cart' %}",
+		data:formData,
+		success:function(data){
+			// $("#jquery-message").text("Added" +' ' + data.item_added + " Deleted " + ' ' + data.deleted)
+			console.log(data);
+			showFlashMessage(data.flash_message);
+			update_cart()
+		},
+		error:function(response,error){
+			// console.log(response)
+			// console.log(error)
+			$("#add-form").submit();
+		}
+	});
+	$("#add-form").submit();
+});
+
+$('#enlarge img').width(100);
+$('#enlarge img').mouseover(function()
+{
+   $(this).css("cursor","pointer");
+   $(this).animate({width: "300px", height: "300px"}, 'slow');
+});
+
+$('#enlarge img').mouseout(function()
+{
+   $(this).animate({width: "100px", height: "100px"}, 'slow');
+});
+
+$('#customer-form').click(function(evt){
+	evt.preventDefault();
+	if( $("#name1").val() == ""){
+		$("#error").addClass("errors").text("please enter your name");
+	}
+	else if ($("#number1").val() == ""){
+		$("#error1").addClass("errors").text("please enter your number")
+	}
+	else if ($("#number1").val().length > 0 && $("#name1").val().length > 0 ){
+		$("#error").removeClass("errors").text("");
+		$("#error1").removeClass("errors").text("");
+		$("#customer-form").unbind("click");
+	}
+
+
+});
+
+});
+
+
+    {% endblock %}
+
+
+
+
+
+</script>
+
+
+<head>
+	<title></title>
+	
+</head>
+</head>
+{% block detail %}
+<body>
+
+<div class="container">
+
+
+
+<!-- <div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Warning!</strong> Better check yourself, you're not looking too good.
+</div> -->
+
+
+<!-- {% if object.variation_set.count > 1 %}
+<h3>{{object.variation_set.first.price }}</h3>
+<form method="GET" action="{% url 'cart' %}">
+<select name="item" class="form-control">
+{% for var_obj in object.variation_set.all %}
+<option value="{{ var_obj.id }}">{{ var_obj }}</option>
+{% endfor %}
+</select>
+{% endif %}
+</br>
+<input type="submit" class="btn btn-default" value="Add to cart"/>
+</form> -->
+
+<div class="row">
+
+	<!-- <div class="col-md-3 col-sm-4">
+	<div class="well">
+	<h3 style="margin-bottom:15px"class="text-center"> {{ object.name }} </h3>
+	<ul class="list text-left">
+	<li style="margin-bottom:15px"><h5> price {{ object.price }} ksh</h5></li>
+	<li style="margin-bottom:15px"><h5>{{ object.details }}</h5></li>
+	<li style="margin-bottom:15px"><h5>size {{ object.size }}</h5></li>
+	<li><h5>style {{ object.category.description }}</h5></li>
+	</ul>
+	</div>
+	</div> -->
+
+
+
+<div style="background:white;margin-right:25px;" class="col-md-8 col-xs-12 well well-sm">
+<h3 style="margin-top:5px" class="text-center"> {{ object.name }} </h3>
+		<img style="width:40%;height:270px;border:none;"class="img-responsive center-block" src="{{ object.image.image.url }}">
+
+		
+
+	
+<div class="row">
+<div class="col-md-4 col-xs-10 col-md-offset-4 col-xs-offset-1">
+	<table id="enlarge" class="table table-responsive ">
+		<tr>
+		{% for other in object.productimage_set.all %}
+
+		<td style="border:none;">
+		<img style="width:100px;height:100px;border:none;" class="img-responsive img-enlarge" src="{{ other.image.url }}">
+		</td>
+		{% empty %}
+		<td style="border:none;"></td>
+		{% endfor %}
+		</tr>
+		</table>
+		</div>
+		</div>
+
+	<ul style="background-color:#00CCFF;padding-bottom:10px;margin:0px" class="list text-center">
+	<br/>
+	<h4 style="margin-top:0px;color:white;"> More Details </h4>
+	<li style="margin-bottom:15px;color:white;"><h5> <b>price {{ object.price }} ksh</b></h5></li>
+	<li style="margin-bottom:15px;color:white;"><h5><b>{{ object.details }}</b></h5></li>
+	<li style="margin-bottom:15px;color:white;"><h5><b>size {{ object.size }}</b></h5></li>
+	<li style="color:white;"><h5><b>style {{ object.category.description }}</b></h5></li>
+	</ul>
+
+	</div>
+
+
+	<div class=" well col-md-3 col-md-offset-0 col-xs-8 col-xs-offset-2 center-align">
+
+	<h5 class="text-center">Checkout Item or click to order <br/>
+
+	you will be called back</h5>
+	<!-- <form class='form' method="GET" action='.'>{% csrf_token %}
+	
+	<input type="hidden" value="object.name" name="name">
+	<input type="hidden" value="object.price" name="price">
+	<input type="hidden" value="object.size" name="size">
+	<input type="text" value="" name="contact">
+	<input type="text" value="" name="quantity">
+	<input type="submit" value="submit">
+	</form> -->
+<form id="add-form" method="GET" action="{% url 'cart' %}"> 
+<p id="jquery-message" class="lead">
+
+</p> 
+{% if object.variation_set.count > 1 %}
+
+<h3 id="price">{{object.variation_set.first.price }}</h3>
+<select name="item" class="form-control variation_select">
+{% for var_obj in object.variation_set.all %}
+<option data-sale-price="{{ var_obj.sale_price }}" data-price="{{var_obj.price }}" value="{{ var_obj.id }}">{{ var_obj }}</option>
+{% endfor %}
+
+</select>
+{% else %}
+<input type="hidden" name="item" value="{{ object.variation_set.first.id }}"/>
+
+<h3 id="price">{% if object.variation_set.first.sale_price %}
+{{ object.variation_set.first.sale_price }}
+{% else %}
+
+{{ object.variation_set.first.price }}
+{% endif %}
+</h3>
+{% endif %}
+</br>
+
+
+<input class="form-control" type="number" name="qty" value="1" />
+</br>
+<input id="submit-btn" type="submit" class="btn btn-default btn-block" value="Add to cart" style="background-color:#00CCFF;"/>
+</form>
+<hr/>
+<p class="text-center"> <b> Or Order</b></p>
+
+
+<form class="form" name="customer_form" role="form" method="POST" action=".">
+
+{% csrf_token %}
+
+<div class="form-group text-center">
+<p id="error" > </p>
+<input id="name1" type="text" name="firstname" value="" placeholder="  enter your name" />
+</div>
+
+<div class="form-group text-center">
+<input id="number1" type="number" name="contact" value="" placeholder="  enter your number" />
+<p id="error1" > </p>
+</div>
+
+<input type="hidden" name="product" value="{{object.name }}" />
+<input type="hidden" name="size" value="{{object.size }}" />
+
+<div class="form-group">
+<input id="customer-form" class="btn btn-default center-block" type="submit" value="send order" style="background-color:#00CCFF;" />
+
+</div>
+
+</form>
+
+
+<p class="text-center">
+<b> share on social media</b>
+<br/>
+<br/>
+
+<a style="margin-right:15px;"href="https://www.facebook.com/taggzfashion/">
+<i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i>
+</a>
+	<a class="icons" href="https://www.instagram.com/taggz.fashion/">
+<i class="fa fa-instagram fa-3x" aria-hidden="true"></i>
+</a>
+</p>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+<div class="row">
+
+<h4> You may also like </h4>
+
+{% for related_products in related %}
+	<div class="col-xs-6 col-md-3">
+
+	<a style="border:none;" href="{{ related_products.get_absolute_url }}" class="thumbnail"><img style="width:150px;height:150px;border:none;" class="img-responsive" src="{{ related_products.image.image.url }}"> </a>
+		<p style="width:150px;height:7px;text-align:center;font-weight:bold;">{{ related_products.name }}</p>
+		<p style="width:150px;height:7px;text-align:center;">{{ related_products.price }} Ksh</p><br/>
+
+		 {% cycle '' '' '' '</div><div class="row">' %} 
+		 </br>
+		 </br>
+		</div>
+		{% endfor %}
+		</div>
+		</div>
+
+<!-- <div class="row">
+
+<h4> Related Products </h4>
+{% for related_products in related %}
+<a href="{{ related_products.get_absolute_url }}"><img style="width:150px;height:150px;border:none;" class="img-responsive" src="{{ related_products.image.image.url }}"</a><br/>
+
+{% endfor %}
+</div>
+</div> -->
+
+
+
+
+</body>
+{% endblock %}
+</html>

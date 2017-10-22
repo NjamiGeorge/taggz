@@ -1,0 +1,4 @@
+tables=products-rows(id,name,price,quantity,buying_price,supplier)
+	suppliers(name,contact,product)
+
+	

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+<script>
+
+	{% block jquery %}
+
+	 $(".item-qty").change(function(){
+	 	// $(this).next(".btn-update").fadeIn();
+
+	// event.preventDefault(); 
+	//get form data
+	var item = $(this).prev("input[type='hidden']").val();
+	var qty = $(this).val();
+	var data={
+		item:item,
+		qty:qty,
+	}
+	console.log(data);
+	$.ajax({
+		type:"GET",
+		url:"{% url 'cart' %}",
+		data:data,
+		success:function(data){
+			$("#jquery-message").text("Added" +' ' + data.item_added + " Deleted " + ' ' + data.deleted)
+			if (data.deleted){
+				$("#item-"+ item).fadeOut(); 
+				$("#subtotal").text(data.subtotal);
+			}
+			else 
+			{
+				$("#item-line-total-"+item).text(data.line_total);
+				$("#subtotal").text(data.cart_total);
+				$("#carttotal").text(data.cart_total);
+			}
+			var message=""
+			if (data.item_added){
+				message="new item added"
+			}else if(data.deleted){
+				message="item deleted"
+			}else{
+				message="item updated"
+			}
+			showFlashMessage(data.flash_message)
+			update_cart()
+		},
+		error:function(response,error){
+			$("#add-form").submit();
+		}
+	});
+
+});
+	{% endblock %}
+</script>
+
+{% block form %}
+
+{% if object.cartitem_set.count < 1 %}
+
+<h3>your cart is empty</h3>  
+
+{% else %}
+
+<div class="col-sm-6 col-md-3 col-sm-offset-2">
+<h4 class="center-block">Your Cart</h4>
+<table class="table " >
+{% for item in object.cartitem_set.all %}
+	<tr id="item-{{ item.item.id }}">
+	
+	<td>{{ item.item.get_title }}</td>
+	<td id="item-line-total-{{ item.item.id }}">{{ item.line_item_total }}</td>
+	</tr>
+	<!-- <tr>
+		<td id="item-line-total-{{ item.item.id }}">price {{ item.line_item_total }}</td>
+	</tr> -->
+	<tr>
+	
+	
+	
+	
+	<br/>
+	<td>
+	<form  action="." method="GET">
+	<input  type="hidden" name="item" value="{{ item.item.id }}"/>
+	<input type="number" class="item-qty" name="qty" value="{{ item.quantity }}"/>
+	<br/>
+	<button type="submit" class="btn btn-default btn-update control-label" style="margin-right:10px;margin-top:7px;background-color:#00CCFF;" value="update"> update </button>
+
+	<a class="text-right" href="{{ item.remove }}"><button style="margin-left:10px;margin-top:7px;background-color:#00CCFF;"class="btn btn-default" type="button">remove</button></a>
+	</form>
+	</td>
+	
+	</tr>
+
+	
+	
+
+{% endfor %}
+<tr>
+	<td colspan="4" class="text-right"> Total: <span id="subtotal">{{ object.subtotal }}</span></td>
+</tr>
+
+<tr>
+	<td colspan="4" class="text-right"><a class="btn btn-warning" href="{% url 'checkout' %}">Checkout</a></td>
+</tr>
+
+</table>
+	
+</div>
+{% endif %}
+
+
+{% endblock %}
