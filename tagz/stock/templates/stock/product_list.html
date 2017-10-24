@@ -11,9 +11,15 @@
 
 {% block jquery %}
 
-$("button").click(function(){
-	product=$(this).attr('value');
-});
+var button_val;
+
+$('button').on('click',function(){
+	product = $(this).attr('value');
+	//button_val = product;
+	$('#product1').val(product);
+	
+//console.log(button_val)
+})
 
 
 
