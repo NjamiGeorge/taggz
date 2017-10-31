@@ -28,4 +28,7 @@
 	}
 	$(document).ready(function(){
 		update_cart();
+
+	
+
 	});

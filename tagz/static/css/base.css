@@ -78,3 +78,14 @@ a:hover{
   	font-weight: bold;
   	font-size:14px;
   }
+
+  #modalId{
+    /*display: none; */
+    background-color: #FFFFFF; 
+    position: fixed; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%;
+    /*z-index: 1;*/
+  }

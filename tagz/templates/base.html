@@ -61,6 +61,7 @@
   <a href="#carousel-1" class="right carousel-control" data-slide="next">
   <span class="glyphicon glyphicon-chevron-right"></span></a>
 
+
 </div>
   
 </div>
@@ -79,6 +80,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="{% url 'product_list' %}"><b>Tagz</b></a>
+        
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -99,12 +101,14 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <li>
-        <form class="form form-inline navbar-form">
+      
+       <form class="form form-inline navbar-form text-center">
         <div class="form-group">
           <input type="text" name="search" class="form-control" placeholder="Search">
         </div>
-        <button type="submit" class="btn btn-default form-control"><span class="glyphicon glyphicon-search"></span></button>
+        <button type="submit" class="navabar-btn btn-default form-control"><span class="glyphicon glyphicon-search"></span></button>
       </form>
+     
       </li>
       <li>
         <a href="{% url 'cart' %}"><i class="fa fa-shopping-cart fa-navbar-cart"></i><span id="cart-count-badge" class="badge">{{ request.session.cart_item_count }}</span></a>
@@ -119,6 +123,7 @@
         {% endif %}
       </ul>
     </div><!-- /.navbar-collapse -->
+
   </div><!-- /.container-fluid -->
 </nav>
 
